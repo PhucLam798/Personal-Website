@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ta Phuc Lam</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #1c1b1b;
+            color: #f0f4f8;
+            overflow-x: hidden;
+            opacity: 0;
+            animation: bodyFadeIn 0.8s ease forwards;
+        }
+        @keyframes bodyFadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* ----- background orbs ----- */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.35;
+        }
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            left: -200px;
+            background: radial-gradient(circle, #0a4b6e, transparent 70%);
+            animation: orbFloat 8s ease-in-out infinite alternate;
+        }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -150px;
+            background: radial-gradient(circle, #00c8ff, transparent 70%);
+            animation: orbFloat 10s ease-in-out infinite alternate-reverse;
+        }
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, #0a6b8e, transparent 70%);
+            opacity: 0.20;
+            animation: orbPulse 6s ease-in-out infinite alternate;
+        }
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(30px, -20px);
+            }
+        }
+        @keyframes orbPulse {
+            0% {
+                opacity: 0.15;
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+            100% {
+                opacity: 0.30;
+                transform: translate(-50%, -50%) scale(1.10);
+            }
+        }
+
+        /* ----- glassmorphism ----- */
+        .glass {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+        }
+        .glass:hover {
+            border-color: rgba(0, 200, 255, 0.50);
+            box-shadow: 0 0 30px rgba(0, 200, 255, 0.10);
+            transform: translateY(-3px);
+        }
+
+        /* ----- glow ring (behind avatar) ----- */
+        .glow-ring {
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 200, 255, 0.30), rgba(0, 80, 130, 0.15) 60%, transparent 80%);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.10);
+            }
+        }
+
+        /* ----- avatar wrapper ----- */
+        .avatar-wrapper {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ----- pills ----- */
+        .skill-pill {
+            background: rgba(0, 200, 255, 0.12);
+            color: #c0ecff;
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            transition: background 0.25s, border-color 0.25s;
+            backdrop-filter: blur(4px);
+        }
+        .skill-pill:hover {
+            background: rgba(0, 200, 255, 0.22);
+            border-color: rgba(0, 200, 255, 0.40);
+        }
+
+        /* ----- buttons ----- */
+        .btn-primary {
+            background: #00c8e0;
+            color: #0a0a0a;
+            padding: 0.70rem 2.2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary:hover {
+            background: #00e0f8;
+            transform: scale(1.02);
+            box-shadow: 0 0 35px rgba(0, 200, 255, 0.30);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #00c8ff;
+            padding: 0.70rem 2.2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1.5px solid rgba(0, 200, 255, 0.40);
+            transition: background 0.25s, border-color 0.25s, transform 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-outline:hover {
+            background: rgba(0, 200, 255, 0.08);
+            border-color: #00c8ff;
+            transform: scale(1.02);
+        }
+        .btn-github {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.50rem 1.25rem;
+            border-radius: 9999px;
+            font-size: 0.80rem;
+            font-weight: 500;
+            color: #d0e0ec;
+            transition: background 0.25s, border-color 0.25s, color 0.25s;
+            text-decoration: none;
+            backdrop-filter: blur(4px);
+        }
+        .btn-github:hover {
+            background: rgba(0, 200, 255, 0.12);
+            border-color: rgba(0, 200, 255, 0.35);
+            color: #fff;
+        }
+        .btn-github svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* ----- section title ----- */
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #e0f2fe, #80d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .shimmer-text {
+            background: linear-gradient(135deg, #e0f2fe 30%, #00c8ff 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ----- nav ----- */
+        .nav-link {
+            color: #b0c8d8;
+            transition: color 0.25s;
+            font-weight: 500;
+            font-size: 0.90rem;
+            position: relative;
+            text-decoration: none;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0;
+            height: 2px;
+            background: #00c8ff;
+            transition: width 0.30s;
+        }
+        .nav-link:hover {
+            color: #fff;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* ----- education ----- */
+        .education-entry {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        .education-entry:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .education-entry .title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+        .education-entry .meta {
+            font-size: 0.85rem;
+            color: #9ab0c0;
+        }
+        .education-entry .detail {
+            font-size: 0.90rem;
+            color: #c8dae8;
+            margin-top: 0.2rem;
+        }
+
+        /* ----- skill categories ----- */
+        .skill-category {
+            margin-bottom: 0.75rem;
+        }
+        .skill-category strong {
+            color: #80d4ff;
+            font-weight: 600;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .skill-category .skill-items {
+            color: #d0e4f0;
+        }
+        .skill-category .skill-items span {
+            background: rgba(0, 200, 255, 0.08);
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            margin: 0.2rem 0.2rem 0.2rem 0;
+            display: inline-block;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 200, 255, 0.10);
+        }
+
+        /* ----- awards ----- */
+        .award-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: background 0.25s, border-color 0.25s;
+        }
+        .award-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(0, 200, 255, 0.20);
+        }
+        .award-item .award-badge {
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+        .award-item .award-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #d0e4f0;
+        }
+        .award-item .award-text small {
+            font-weight: 400;
+            color: #8aaabc;
+            font-size: 0.80rem;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* ----- contact ----- */
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.60rem;
+            color: #b8cedc;
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 0.50rem 1.2rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            transition: background 0.25s, border-color 0.25s, color 0.25s;
+            backdrop-filter: blur(4px);
+        }
+        .contact-link:hover {
+            background: rgba(0, 200, 255, 0.08);
+            border-color: rgba(0, 200, 255, 0.25);
+            color: #fff;
+        }
+        .contact-link svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ----- responsive ----- */
+        @media (max-width: 768px) {
+            .avatar-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+            .glow-ring {
+                width: 240px;
+                height: 240px;
+            }
+            .orb-1,
+            .orb-2 {
+                opacity: 0.20;
+            }
+        }
+        @media (max-width: 480px) {
+            .avatar-wrapper {
+                width: 160px;
+                height: 160px;
+            }
+            .glow-ring {
+                width: 190px;
+                height: 190px;
+            }
+        }
+        section {
+            scroll-margin-top: 80px;
+        }
+        .text-balance {
+            text-wrap: balance;
+        }
+
+        /* ============================================================ */
+        /*  🎬 ENTRANCE ANIMATIONS  */
+        /* ============================================================ */
+
+        /* ---- base hidden state ---- */
+        .animate-on-load {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .animate-on-load.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- header slide down ---- */
+        .header-animate {
+            opacity: 0;
+            transform: translateY(-30px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .header-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- avatar scale + rotate ---- */
+        .avatar-animate {
+            opacity: 0;
+            transform: scale(0.80) rotate(-6deg);
+            transition: opacity 0.9s cubic-bezier(0.34, 1.56, 0.64, 1),
+                transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .avatar-animate.visible {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        /* ---- glow ring fade ---- */
+        .glow-ring-animate {
+            opacity: 0;
+            transition: opacity 1.2s ease 0.2s;
+        }
+        .glow-ring-animate.visible {
+            opacity: 1;
+        }
+
+        /* ---- hero text stagger ---- */
+        .hero-title {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+        }
+        .hero-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-sub {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.30s,
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.30s;
+        }
+        .hero-sub.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-meta {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s,
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s;
+        }
+        .hero-meta.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-buttons {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.60s,
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.60s;
+        }
+        .hero-buttons.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- section titles ---- */
+        .section-title-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .section-title-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- cards stagger (child of .stagger-container) ---- */
+        .stagger-container>* {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .stagger-container.visible>*:nth-child(1) {
+            transition-delay: 0.05s;
+        }
+        .stagger-container.visible>*:nth-child(2) {
+            transition-delay: 0.12s;
+        }
+        .stagger-container.visible>*:nth-child(3) {
+            transition-delay: 0.19s;
+        }
+        .stagger-container.visible>*:nth-child(4) {
+            transition-delay: 0.26s;
+        }
+        .stagger-container.visible>*:nth-child(5) {
+            transition-delay: 0.33s;
+        }
+        .stagger-container.visible>*:nth-child(6) {
+            transition-delay: 0.40s;
+        }
+        .stagger-container.visible>*:nth-child(7) {
+            transition-delay: 0.47s;
+        }
+        .stagger-container.visible>*:nth-child(8) {
+            transition-delay: 0.54s;
+        }
+        .stagger-container.visible>*:nth-child(9) {
+            transition-delay: 0.61s;
+        }
+        .stagger-container.visible>*:nth-child(10) {
+            transition-delay: 0.68s;
+        }
+        .stagger-container.visible>*:nth-child(11) {
+            transition-delay: 0.75s;
+        }
+        .stagger-container.visible>*:nth-child(12) {
+            transition-delay: 0.82s;
+        }
+
+        .stagger-container.visible>* {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- contact section ---- */
+        .contact-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s,
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+        }
+        .contact-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- scroll indicator (optional) ---- */
+        .scroll-indicator {
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+        @keyframes scrollBounce {
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(8px);
+                opacity: 1;
+            }
+        }
+
+        /* ---- footer ---- */
+        .footer-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease 0.3s,
+                transform 0.7s ease 0.3s;
+        }
+        .footer-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== BACKGROUND ORBS ====== -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- ====== HEADER ====== -->
+    <header class="header-animate fixed top-0 left-0 w-full z-50 bg-[#121212]/80 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="text-xl font-bold tracking-tight text-white/90 hover:text-white transition">
+                <span class="text-cyan-400">⌘</span> PL
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#awards" class="nav-link">Awards</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+            <button id="menuToggle" class="md:hidden text-white/70 hover:text-white transition" aria-label="Toggle menu">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="7" x2="21" y2="7" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="17" x2="21" y2="17" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobileNav" class="md:hidden bg-[#121212]/95 backdrop-blur-xl border-b border-white/5 overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+            <div class="flex flex-col items-center gap-4 py-6">
+                <a href="#home" class="nav-link text-lg">Home</a>
+                <a href="#about" class="nav-link text-lg">About</a>
+                <a href="#projects" class="nav-link text-lg">Projects</a>
+                <a href="#awards" class="nav-link text-lg">Awards</a>
+                <a href="#contact" class="nav-link text-lg">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ====== MAIN ====== -->
+    <main class="relative z-10 pt-24">
+
+        <!-- ============================================================ -->
+        <!--  HERO  -->
+        <!-- ============================================================ -->
+        <section id="home" class="max-w-6xl mx-auto px-6 py-12 md:py-20 min-h-[80vh] flex items-center">
+            <div class="grid md:grid-cols-2 gap-12 items-center w-full">
+                <!-- left -->
+                <div class="space-y-6">
+                    <div>
+                        <h1 class="hero-title text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1]">
+                            <span class="shimmer-text">Ta Phuc Lam</span>
+                        </h1>
+                        <div class="hero-sub text-xl sm:text-2xl font-medium text-cyan-300 mt-2">
+                            Bachelor of Electronics and Telecommunications Engineering
+                        </div>
+                    </div>
+                    <div class="hero-meta space-y-2 text-sm sm:text-base text-gray-300/90">
+                        <p class="flex items-start gap-2">
+                            <span class="text-cyan-400 text-lg">▹</span>
+                            University of Science, VNU-HCM
+                        </p>
+                    </div>
+                    <div class="hero-buttons flex flex-wrap gap-4 pt-2">
+                        <a href="#projects" class="btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                            View Projects
+                        </a>
+                        <a href="#contact" class="btn-outline">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.574 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            Contact Me
+                        </a>
+                    </div>
+                </div>
+                <!-- right: avatar with bee.jpg -->
+                <div class="avatar-animate flex justify-center items-center relative">
+                    <div class="avatar-wrapper">
+                        <div class="glow-ring glow-ring-animate"></div>
+                        <img src="bee.jpg" alt="Ta Phuc Lam" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--  ABOUT  -->
+        <section id="about" class="max-w-6xl mx-auto px-6 py-16 md:py-24">
+            <h2 class="section-title section-title-animate mb-10">About Me</h2>
+
+            <div class="grid md:grid-cols-5 gap-6 auto-rows-min stagger-container">
+                <!-- bio – spans 3 cols -->
+                <div class="md:col-span-3 glass rounded-3xl p-7 md:p-9 space-y-5">
+                    <p class="text-base md:text-lg leading-relaxed text-gray-200/90 text-balance">
+                        I am a passionate AIoT and Robotics student. I have cultivated a strong background in Embedded Systems, Machine Learning, Computer Vision,... My goal is to transform technical innovations into meaningful social impact, especially in healthcare accessibility.
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <span class="skill-pill">🎯 AI for Good</span>
+                        <span class="skill-pill">🧠 ML &amp; CV</span>
+                        <span class="skill-pill">⚡ Embedded Systems</span>
+                        <span class="skill-pill">🤝 Leadership</span>
+                    </div>
+                </div>
+
+                <!-- education – spans 2 cols -->
+                <div class="md:col-span-2 glass rounded-3xl p-7 space-y-4">
+                    <div class="flex items-center gap-3 text-cyan-300 text-sm font-medium uppercase tracking-wider">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6L12 3L20 6L12 9L4 6Z" stroke="currentColor"/><path d="M4 6V12L12 15L20 12V6" stroke="currentColor"/><path d="M12 15V21" stroke="currentColor"/><path d="M8 12.5V16.5L12 18.5L16 16.5V12.5" stroke="currentColor"/></svg>
+                        Education
+                    </div>
+                    <div class="space-y-3">
+                        <div class="education-entry">
+                            <div class="title">University of Science, VNU-HCM</div>
+                            <div class="meta">Aug 2026 – Present</div>
+                            <div class="detail">Bachelor of Electronics and Telecommunications Engineering</div>
+                        </div>
+                        <div class="education-entry">
+                            <div class="title">Le Quy Don High School for the Gifted</div>
+                            <div class="meta">Physics Specialized Class · Aug 2023 – May 2026</div>
+                            <div class="detail">GPA: 8.7/10.0 (Grade 12) <br>President of STEM Club (Oct 2024 – May 2026)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- technical skills – full width -->
+                <div class="md:col-span-5 glass rounded-3xl p-7 md:p-9">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-cyan-300/70 mb-4 flex items-center gap-2">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/></svg>
+                        Technical Skills
+                    </h3>
+                    <div class="space-y-2 text-sm text-gray-300/90">
+                        <div class="skill-category"><strong>Programming:</strong> <span class="skill-items"><span>Python</span><span>C/C++</span><span>Arduino IDE</span></span></div>
+                        <div class="skill-category"><strong>AI &amp; Computer Vision:</strong> <span class="skill-items"><span>YOLO (Detection, Segmentation)</span><span>Depth Estimation</span><span>MultiLayer Perceptron (MLP)</span><span>Regression (Linear, Polynomial)</span></span></div>
+                        <div class="skill-category"><strong>Embedded Systems:</strong> <span class="skill-items"><span>Arduino</span><span>ESP8266</span><span>ESP32</span><span>Jetson Nano</span><span>Raspberry Pi</span></span></div>
+                        <div class="skill-category"><strong>Robotics &amp; Control:</strong> <span class="skill-items"><span>PID Control</span><span>Navigation</span><span>error handling</span></span></div>
+                        <div class="skill-category"><strong>Tools &amp; Others:</strong> <span class="skill-items"><span>Git</span><span>basic Linux</span><span>Roboflow</span></span></div>
+                        <div class="skill-category"><strong>Languages:</strong> <span class="skill-items"><span>Vietnamese (native)</span><span>English (...)</span></span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!--  TECHNICAL PROJECTS  -->
+        <!-- ============================================================ -->
+        <section id="projects" class="max-w-6xl mx-auto px-6 py-16 md:py-24">
+            <h2 class="section-title section-title-animate mb-10">Technical Projects</h2>
+
+            <div class="grid md:grid-cols-3 gap-6 stagger-container">
+
+                <!-- ===== PROJECT CARD ===== -->
+                <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
+                            Group Project - Team Leader
+                        </div>
+                        <h3 class="text-xl font-bold text-white leading-snug">Gaze-Controlled Computer</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed">YOLOv8 model for pupil detection and polynomial regression with smooth cursor control.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">YOLOv8 detect</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Polynomial Regression</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Linear Regression</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Kalman Filter</span>
+                        </div>
+                    </div>
+                    <div class="pt-5 mt-4 border-t border-white/5">
+                        <a href="https://github.com/PhucLam798/Gaze-Controlled-Computer" target="_blank" rel="noopener noreferrer" class="btn-github w-full justify-center">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
+                            Research Project
+                        </div>
+                        <h3 class="text-xl font-bold text-white leading-snug">FoG Parkinson Detection</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed">IoT wearable using an Multi-Layer Perceptron (MLP) model to predict Freezing of Gait events and trigger instant audio warnings (&lt;1.2s latency) for patients</p>
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">MLP</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">MPU6050</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">ESP8266</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">IoT</span>
+                        </div>
+                    </div>
+                    <div class="pt-5 mt-4 border-t border-white/5">
+                        <a href="https://github.com/PhucLam798/FoG-Parkinson-Detection" target="_blank" rel="noopener noreferrer" class="btn-github w-full justify-center">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
+                            Personal Project
+                        </div>
+                        <h3 class="text-xl font-bold text-white leading-snug">Autonomous Sidewalk Robot</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed">Self-driving robot utilizing computer vision for sidewalk mapping and PID control for stable, autonomous path navigation.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">YOLOv8 Seg</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">PID Control</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Homography</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Encoder</span>
+                        </div>
+                    </div>
+                    <div class="pt-5 mt-4 border-t border-white/5">
+                        <a href="https://github.com/PhucLam798/Autonomous-Sidewalk-Robot" target="_blank" rel="noopener noreferrer" class="btn-github w-full justify-center">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
+                            Personal Project
+                        </div>
+                        <h3 class="text-xl font-bold text-white leading-snug">Headmouse-Hardware</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed">Arduino-based assistive mouse featuring head-tracking movement and blink-to-click functionality.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">MPU6050</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">TCRT5000</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Kalman Filter</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">ATmega32u4</span>
+                        </div>
+                    </div>
+                    <div class="pt-5 mt-4 border-t border-white/5">
+                        <a href="https://github.com/PhucLam798/Headmouse-Hardware" target="_blank" rel="noopener noreferrer" class="btn-github w-full justify-center">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
+                            Personal Project
+                        </div>
+                        <h3 class="text-xl font-bold text-white leading-snug">Headmouse-Software</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed">A webcam-based headmouse using MediaPipe to map nose movements to cursor motion and detecting independent eye-blinks for clicks.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">MediaPipe</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10"> Facial Landmarks</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Smoothing Technique</span>
+                        </div>
+                    </div>
+                    <div class="pt-5 mt-4 border-t border-white/5">
+                        <a href="https://github.com/PhucLam798/Headmouse-Sorfware" target="_blank" rel="noopener noreferrer" class="btn-github w-full justify-center">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
+                            Group Project - Team Leader
+                        </div>
+                        <h3 class="text-xl font-bold text-white leading-snug">Fine-Tuned-LLM-Chat</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed">Integrates a fine-tuned Gemma2:2b, Qwen2.5:3b,... model to convert discrete characters into complete sentences</p>
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Lora</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Data</span>
+                        </div>
+                    </div>
+                    <div class="pt-5 mt-4 border-t border-white/5">
+                        <a href="https://github.com/PhucLam798/Fine-Tuned-LLM-Chat" target="_blank" rel="noopener noreferrer" class="btn-github w-full justify-center">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!--  AWARDS & CERTIFICATES  -->
+        <!-- ============================================================ -->
+        <section id="awards" class="max-w-6xl mx-auto px-6 py-16 md:py-24">
+            <h2 class="section-title section-title-animate mb-10">Awards &amp; Certificates</h2>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-container">
+
+                <div class="award-item">
+                    <span class="award-badge">🏅</span>
+                    <div class="award-text">
+                        Fourth Prize · Vietnam Science and Engineering Fair
+                        <small>STEM Competition</small>
+                    </div>
+                </div>
+
+                <div class="award-item">
+                    <span class="award-badge">🥉</span>
+                    <div class="award-text">
+                        Third Prize · National Youth Informatics Contest Finals
+                        <small>Programming &amp; IT</small>
+                    </div>
+                </div>
+
+                <div class="award-item">
+                    <span class="award-badge">🥉</span>
+                    <div class="award-text">
+                        Bronze Medal · HSGS Olympiad, VNU Ha Noi
+                        <small>Physics Olympiad</small>
+                    </div>
+                </div>
+
+                <div class="award-item">
+                    <span class="award-badge">🥇</span>
+                    <div class="award-text">
+                        First Prize · Regional Youth Informatics qualifiers
+                        <small>Programming &amp; IT</small>
+                    </div>
+                </div>
+
+                <div class="award-item">
+                    <span class="award-badge">⭐</span>
+                    <div class="award-text">
+                        Top 50 Nationwide · Samsung Solve for Tomorrow Viet Nam
+                        <small>STEM Competition</small>
+                    </div>
+                </div>
+
+                <div class="award-item">
+                    <span class="award-badge">🥇</span>
+                    <div class="award-text">
+                        First Prize · Provincial Youth Informatics Competition
+                        <small>Programming &amp; IT</small>
+                    </div>
+                </div>
+
+                <div class="award-item">
+                    <span class="award-badge">🥈</span>
+                    <div class="award-text">
+                        Second Prize · Provincial Science and Engineering Fair
+                        <small>STEM Competition</small>
+                    </div>
+                </div>
+
+                <div class="award-item">
+                    <span class="award-badge">🏅</span>
+                    <div class="award-text">
+                        Fourth Prize · Provincial Academic Excellence Selection Exams
+                        <small>Physics Olympiad</small>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!--  CONTACT / FOOTER  -->
+
+        <footer id="contact" class="max-w-6xl mx-auto px-6 py-16 md:py-24 border-t border-white/5">
+            <div class="contact-animate text-center space-y-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-white/90 tracking-tight">
+                    Let's connect and build<br class="sm:hidden" />
+                    <span class="shimmer-text">something amazing.</span>
+                </h2>
+
+                <div class="flex flex-wrap justify-center gap-3 md:gap-4 pt-2">
+                    <a href="mailto:lam07092008@gmail.com" class="contact-link">
+                        <svg viewBox="0 0 24 24"><path d="M4 6l8 5 8-5"/><path d="M4 6v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6"/></svg>
+                        lam07092008@gmail.com
+                    </a>
+                    <a href="tel:+84827080709" class="contact-link">
+                        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.574 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        (+84) 827-080-709
+                    </a>
+                    <a href="https://github.com/PhucLam798" target="_blank" rel="noopener noreferrer" class="contact-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.15 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.62.24 2.85.12 3.15.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        GitHub
+                    </a>
+                    <a href="https://www.facebook.com/phuc.lam.993406" target="_blank" rel="noopener noreferrer" class="contact-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Facebook
+                    </a>
+                </div>
+
+                <div class="footer-animate pt-8 text-xs text-gray-500/60 tracking-wide">
+                    © 2026 Tạ Phúc Lâm · Built with <span class="text-cyan-400/50">✦</span> precision
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- ====== JAVASCRIPT ====== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ---- mobile menu ----
+            const toggleBtn = document.getElementById('menuToggle');
+            const mobileNav = document.getElementById('mobileNav');
+            let menuOpen = false;
+
+            toggleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                menuOpen = !menuOpen;
+                mobileNav.style.maxHeight = menuOpen ? mobileNav.scrollHeight + 'px' : '0px';
+            });
+
+            document.querySelectorAll('#mobileNav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    menuOpen = false;
+                    mobileNav.style.maxHeight = '0px';
+                });
+            });
+
+            document.addEventListener('click', function(e) {
+                if (menuOpen && !toggleBtn.contains(e.target) && !mobileNav.contains(e.target)) {
+                    menuOpen = false;
+                    mobileNav.style.maxHeight = '0px';
+                }
+            });
+
+            // ---- nav highlight ----
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            function updateActiveLink() {
+                let current = '';
+                const scrollY = window.scrollY + 120;
+                sections.forEach(sec => {
+                    const top = sec.offsetTop;
+                    const height = sec.offsetHeight;
+                    if (scrollY >= top && scrollY < top + height) {
+                        current = sec.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(link => {
+                    link.style.color = link.getAttribute('href') === '#' + current ? '#ffffff' :
+                        '#b0c8d8';
+                });
+            }
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+
+            // ============================================================
+            //  🎬 ENTRANCE ANIMATION ENGINE
+            // ============================================================
+
+            // ---- Helper: add 'visible' class to all .animate-on-load elements ----
+            function revealAnimatedElements() {
+                // Header
+                document.querySelector('.header-animate')?.classList.add('visible');
+
+                // Hero
+                document.querySelector('.hero-title')?.classList.add('visible');
+                document.querySelector('.hero-sub')?.classList.add('visible');
+                document.querySelector('.hero-meta')?.classList.add('visible');
+                document.querySelector('.hero-buttons')?.classList.add('visible');
+
+                // Avatar
+                document.querySelector('.avatar-animate')?.classList.add('visible');
+                document.querySelector('.glow-ring-animate')?.classList.add('visible');
+
+                // Section titles
+                document.querySelectorAll('.section-title-animate').forEach(el => {
+                    el.classList.add('visible');
+                });
+
+                // Stagger containers
+                document.querySelectorAll('.stagger-container').forEach(el => {
+                    el.classList.add('visible');
+                });
+
+                // Contact
+                document.querySelector('.contact-animate')?.classList.add('visible');
+
+                // Footer
+                document.querySelector('.footer-animate')?.classList.add('visible');
+
+                // Any remaining .animate-on-load elements
+                document.querySelectorAll('.animate-on-load').forEach(el => {
+                    el.classList.add('visible');
+                });
+            }
+
+            // ---- reveal on load with a tiny delay for smoothness ----
+            if (document.readyState === 'complete') {
+                setTimeout(revealAnimatedElements, 200);
+            } else {
+                window.addEventListener('load', function() {
+                    setTimeout(revealAnimatedElements, 200);
+                });
+            }
+
+            // ---- also support Intersection Observer for elements that might not be in viewport on load ----
+            // (but since everything is above the fold or we want it all to animate on load, we already did that)
+            // However, for safety, we'll also observe any .animate-on-load that might have been missed.
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            // Observe all .animate-on-load elements (as a fallback)
+            document.querySelectorAll('.animate-on-load:not(.visible)').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Also observe any .stagger-container children that might not have been caught
+            document.querySelectorAll('.stagger-container:not(.visible)').forEach(el => {
+                observer.observe(el);
+            });
+
+            // ---- one more pass after fonts and images load ----
+            window.addEventListener('load', function() {
+                // ensure everything is visible after a moment
+                setTimeout(() => {
+                    document.querySelectorAll('.animate-on-load:not(.visible)').forEach(el => {
+                        el.classList.add('visible');
+                    });
+                    document.querySelectorAll('.stagger-container:not(.visible)').forEach(el => {
+                        el.classList.add('visible');
+                    });
+                }, 400);
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
