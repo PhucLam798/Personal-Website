@@ -385,6 +385,43 @@
             stroke-linejoin: round;
         }
 
+        /* ----- language toggle ----- */
+        .lang-toggle {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 9999px;
+            padding: 0.30rem 0.60rem;
+            display: flex;
+            gap: 0.25rem;
+            font-size: 0.70rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+            transition: border-color 0.25s;
+        }
+        .lang-toggle:hover {
+            border-color: rgba(0, 200, 255, 0.30);
+        }
+        .lang-toggle button {
+            background: transparent;
+            border: none;
+            padding: 0.30rem 0.75rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.70rem;
+            color: #8aaabc;
+            transition: background 0.25s, color 0.25s;
+            letter-spacing: 0.02em;
+        }
+        .lang-toggle button.active {
+            background: rgba(0, 200, 255, 0.18);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(0, 200, 255, 0.08);
+        }
+        .lang-toggle button:not(.active):hover {
+            color: #d0e4f0;
+        }
+
         /* ----- responsive ----- */
         @media (max-width: 768px) {
             .avatar-wrapper {
@@ -398,6 +435,13 @@
             .orb-1,
             .orb-2 {
                 opacity: 0.20;
+            }
+            .lang-toggle {
+                padding: 0.20rem 0.40rem;
+            }
+            .lang-toggle button {
+                padding: 0.20rem 0.55rem;
+                font-size: 0.65rem;
             }
         }
         @media (max-width: 480px) {
@@ -421,7 +465,6 @@
         /*  🎬 ENTRANCE ANIMATIONS  */
         /* ============================================================ */
 
-        /* ---- base hidden state ---- */
         .animate-on-load {
             opacity: 0;
             transform: translateY(40px);
@@ -433,7 +476,6 @@
             transform: translateY(0);
         }
 
-        /* ---- header slide down ---- */
         .header-animate {
             opacity: 0;
             transform: translateY(-30px);
@@ -445,7 +487,6 @@
             transform: translateY(0);
         }
 
-        /* ---- avatar scale + rotate ---- */
         .avatar-animate {
             opacity: 0;
             transform: scale(0.80) rotate(-6deg);
@@ -457,7 +498,6 @@
             transform: scale(1) rotate(0deg);
         }
 
-        /* ---- glow ring fade ---- */
         .glow-ring-animate {
             opacity: 0;
             transition: opacity 1.2s ease 0.2s;
@@ -466,7 +506,6 @@
             opacity: 1;
         }
 
-        /* ---- hero text stagger ---- */
         .hero-title {
             opacity: 0;
             transform: translateY(30px);
@@ -511,7 +550,6 @@
             transform: translateY(0);
         }
 
-        /* ---- section titles ---- */
         .section-title-animate {
             opacity: 0;
             transform: translateY(30px);
@@ -523,7 +561,6 @@
             transform: translateY(0);
         }
 
-        /* ---- cards stagger (child of .stagger-container) ---- */
         .stagger-container>* {
             opacity: 0;
             transform: translateY(35px);
@@ -566,13 +603,11 @@
         .stagger-container.visible>*:nth-child(12) {
             transition-delay: 0.82s;
         }
-
         .stagger-container.visible>* {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* ---- contact section ---- */
         .contact-animate {
             opacity: 0;
             transform: translateY(30px);
@@ -584,23 +619,6 @@
             transform: translateY(0);
         }
 
-        /* ---- scroll indicator (optional) ---- */
-        .scroll-indicator {
-            animation: scrollBounce 2s ease-in-out infinite;
-        }
-        @keyframes scrollBounce {
-            0%,
-            100% {
-                transform: translateY(0);
-                opacity: 0.6;
-            }
-            50% {
-                transform: translateY(8px);
-                opacity: 1;
-            }
-        }
-
-        /* ---- footer ---- */
         .footer-animate {
             opacity: 0;
             transform: translateY(20px);
@@ -610,6 +628,13 @@
         .footer-animate.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* ============================================================ */
+        /*  ⚡ i18n fade transition  */
+        /* ============================================================ */
+        .i18n-transition {
+            transition: opacity 0.15s ease;
         }
     </style>
 </head>
@@ -624,30 +649,41 @@
     <header class="header-animate fixed top-0 left-0 w-full z-50 bg-[#121212]/80 backdrop-blur-xl border-b border-white/5">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="#" class="text-xl font-bold tracking-tight text-white/90 hover:text-white transition">
-                <span class="text-cyan-400">⌘</span> PL
+                <span class="text-cyan-400">⌘</span> <span data-i18n="brand.name">PL</span>
             </a>
-            <nav class="hidden md:flex items-center gap-8">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#projects" class="nav-link">Projects</a>
-                <a href="#awards" class="nav-link">Awards</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </nav>
-            <button id="menuToggle" class="md:hidden text-white/70 hover:text-white transition" aria-label="Toggle menu">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                    <line x1="3" y1="7" x2="21" y2="7" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="17" x2="21" y2="17" />
-                </svg>
-            </button>
+
+            <div class="flex items-center gap-4">
+                <!-- Language Toggle -->
+                <div class="lang-toggle" role="group" aria-label="Language toggle">
+                    <button id="langEn" class="active" data-lang="en" aria-label="English">EN</button>
+                    <button id="langVi" data-lang="vi" aria-label="Tiếng Việt">VI</button>
+                </div>
+
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#home" class="nav-link" data-i18n="nav.home">Home</a>
+                    <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
+                    <a href="#projects" class="nav-link" data-i18n="nav.projects">Projects</a>
+                    <a href="#awards" class="nav-link" data-i18n="nav.awards">Awards</a>
+                    <a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a>
+                </nav>
+
+                <button id="menuToggle" class="md:hidden text-white/70 hover:text-white transition" aria-label="Toggle menu">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="3" y1="7" x2="21" y2="7" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="17" x2="21" y2="17" />
+                    </svg>
+                </button>
+            </div>
         </div>
+
         <div id="mobileNav" class="md:hidden bg-[#121212]/95 backdrop-blur-xl border-b border-white/5 overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
             <div class="flex flex-col items-center gap-4 py-6">
-                <a href="#home" class="nav-link text-lg">Home</a>
-                <a href="#about" class="nav-link text-lg">About</a>
-                <a href="#projects" class="nav-link text-lg">Projects</a>
-                <a href="#awards" class="nav-link text-lg">Awards</a>
-                <a href="#contact" class="nav-link text-lg">Contact</a>
+                <a href="#home" class="nav-link text-lg" data-i18n="nav.home">Home</a>
+                <a href="#about" class="nav-link text-lg" data-i18n="nav.about">About</a>
+                <a href="#projects" class="nav-link text-lg" data-i18n="nav.projects">Projects</a>
+                <a href="#awards" class="nav-link text-lg" data-i18n="nav.awards">Awards</a>
+                <a href="#contact" class="nav-link text-lg" data-i18n="nav.contact">Contact</a>
             </div>
         </div>
     </header>
@@ -664,30 +700,30 @@
                 <div class="space-y-6">
                     <div>
                         <h1 class="hero-title text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1]">
-                            <span class="shimmer-text">Ta Phuc Lam</span>
+                            <span class="shimmer-text" data-i18n-html="hero.name">Ta Phuc Lam</span>
                         </h1>
-                        <div class="hero-sub text-xl sm:text-2xl font-medium text-cyan-300 mt-2">
+                        <div class="hero-sub text-xl sm:text-2xl font-medium text-cyan-300 mt-2" data-i18n="hero.title">
                             Electronics and Telecommunications Engineering Student
                         </div>
                     </div>
                     <div class="hero-meta space-y-2 text-sm sm:text-base text-gray-300/90">
                         <p class="flex items-start gap-2">
                             <span class="text-cyan-400 text-lg">▹</span>
-                            University of Science, VNU-HCM
+                            <span data-i18n="hero.university">University of Science, VNU-HCM</span>
                         </p>
                     </div>
                     <div class="hero-buttons flex flex-wrap gap-4 pt-2">
                         <a href="#projects" class="btn-primary">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                            View Projects
+                            <span data-i18n="hero.btnProjects">View Projects</span>
                         </a>
                         <a href="#contact" class="btn-outline">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.574 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            Contact Me
+                            <span data-i18n="hero.btnContact">Contact Me</span>
                         </a>
                     </div>
                 </div>
-                <!-- right: avatar with bee.jpg -->
+                <!-- right: avatar -->
                 <div class="avatar-animate flex justify-center items-center relative">
                     <div class="avatar-wrapper">
                         <div class="glow-ring glow-ring-animate"></div>
@@ -699,19 +735,19 @@
 
         <!--  ABOUT  -->
         <section id="about" class="max-w-6xl mx-auto px-6 py-16 md:py-24">
-            <h2 class="section-title section-title-animate mb-10">About Me</h2>
+            <h2 class="section-title section-title-animate mb-10" data-i18n="about.title">About Me</h2>
 
             <div class="grid md:grid-cols-5 gap-6 auto-rows-min stagger-container">
                 <!-- bio – spans 3 cols -->
                 <div class="md:col-span-3 glass rounded-3xl p-7 md:p-9 space-y-5">
-                    <p class="text-base md:text-lg leading-relaxed text-gray-200/90 text-balance">
+                    <p class="text-base md:text-lg leading-relaxed text-gray-200/90 text-balance" data-i18n="about.bio">
                         I am a passionate AIoT and Robotics student. I have cultivated a strong background in Embedded Systems, Machine Learning, Computer Vision,... My goal is to transform technical innovations into meaningful social impact, especially in healthcare accessibility.
                     </p>
                     <div class="flex flex-wrap gap-3 pt-2">
-                        <span class="skill-pill">🎯 AI for Good</span>
-                        <span class="skill-pill">🧠 ML &amp; CV</span>
-                        <span class="skill-pill">⚡ Embedded Systems</span>
-                        <span class="skill-pill">🤝 Leadership</span>
+                        <span class="skill-pill" data-i18n="about.pill1">🎯 AI for Good</span>
+                        <span class="skill-pill" data-i18n="about.pill2">🧠 ML &amp; CV</span>
+                        <span class="skill-pill" data-i18n="about.pill3">⚡ Embedded Systems</span>
+                        <span class="skill-pill" data-i18n="about.pill4">🤝 Leadership</span>
                     </div>
                 </div>
 
@@ -719,18 +755,18 @@
                 <div class="md:col-span-2 glass rounded-3xl p-7 space-y-4">
                     <div class="flex items-center gap-3 text-cyan-300 text-sm font-medium uppercase tracking-wider">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6L12 3L20 6L12 9L4 6Z" stroke="currentColor"/><path d="M4 6V12L12 15L20 12V6" stroke="currentColor"/><path d="M12 15V21" stroke="currentColor"/><path d="M8 12.5V16.5L12 18.5L16 16.5V12.5" stroke="currentColor"/></svg>
-                        Education
+                        <span data-i18n="about.education">Education</span>
                     </div>
                     <div class="space-y-3">
                         <div class="education-entry">
-                            <div class="title">University of Science, VNU-HCM</div>
-                            <div class="meta">Aug 2026 – Present</div>
-                            <div class="detail">Electronics and Telecommunications Engineering</div>
+                            <div class="title" data-i18n="about.edu1.title">University of Science, VNU-HCM</div>
+                            <div class="meta" data-i18n="about.edu1.meta">Aug 2026 – Present</div>
+                            <div class="detail" data-i18n="about.edu1.detail">Electronics and Telecommunications Engineering</div>
                         </div>
                         <div class="education-entry">
-                            <div class="title">Le Quy Don High School for the Gifted</div>
-                            <div class="meta">Physics Specialized Class · Aug 2023 – May 2026</div>
-                            <div class="detail">GPA: 8.7/10.0 (Grade 12) <br>President of STEM Club (Oct 2024 – May 2026)</div>
+                            <div class="title" data-i18n="about.edu2.title">Le Quy Don High School for the Gifted</div>
+                            <div class="meta" data-i18n="about.edu2.meta">Physics Specialized Class · Aug 2023 – May 2026</div>
+                            <div class="detail" data-i18n="about.edu2.detail">GPA: 8.7/10.0 (Grade 12) <br>President of STEM Club (Oct 2024 – May 2026)</div>
                         </div>
                     </div>
                 </div>
@@ -739,15 +775,15 @@
                 <div class="md:col-span-5 glass rounded-3xl p-7 md:p-9">
                     <h3 class="text-sm font-semibold uppercase tracking-wider text-cyan-300/70 mb-4 flex items-center gap-2">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/></svg>
-                        Technical Skills
+                        <span data-i18n="about.skillsTitle">Technical Skills</span>
                     </h3>
                     <div class="space-y-2 text-sm text-gray-300/90">
-                        <div class="skill-category"><strong>Programming:</strong> <span class="skill-items"><span>Python</span><span>C/C++</span><span>Arduino IDE</span></span></div>
-                        <div class="skill-category"><strong>AI &amp; Computer Vision:</strong> <span class="skill-items"><span>YOLO (Detection, Segmentation)</span><span>Depth Estimation</span><span>MultiLayer Perceptron (MLP)</span><span>Regression (Linear, Polynomial)</span></span></div>
-                        <div class="skill-category"><strong>Embedded Systems:</strong> <span class="skill-items"><span>Arduino</span><span>ESP8266</span><span>ESP32</span><span>Jetson Nano</span><span>Raspberry Pi</span></span></div>
-                        <div class="skill-category"><strong>Robotics &amp; Control:</strong> <span class="skill-items"><span>PID Control</span><span>Navigation</span><span>error handling</span></span></div>
-                        <div class="skill-category"><strong>Tools &amp; Others:</strong> <span class="skill-items"><span>Git</span><span>basic Linux</span><span>Roboflow</span></span></div>
-                        <div class="skill-category"><strong>Languages:</strong> <span class="skill-items"><span>Vietnamese (native)</span><span>English (...)</span></span></div>
+                        <div class="skill-category"><strong data-i18n="about.skills.prog">Programming:</strong> <span class="skill-items"><span>Python</span><span>C/C++</span><span>Arduino IDE</span></span></div>
+                        <div class="skill-category"><strong data-i18n="about.skills.ai">AI &amp; Computer Vision:</strong> <span class="skill-items"><span>YOLO (Detection, Segmentation)</span><span>Depth Estimation</span><span>MultiLayer Perceptron (MLP)</span><span>Regression (Linear, Polynomial)</span></span></div>
+                        <div class="skill-category"><strong data-i18n="about.skills.embedded">Embedded Systems:</strong> <span class="skill-items"><span>Arduino</span><span>ESP8266</span><span>ESP32</span><span>Jetson Nano</span><span>Raspberry Pi</span></span></div>
+                        <div class="skill-category"><strong data-i18n="about.skills.robotics">Robotics &amp; Control:</strong> <span class="skill-items"><span>PID Control</span><span>Navigation</span><span>error handling</span></span></div>
+                        <div class="skill-category"><strong data-i18n="about.skills.tools">Tools &amp; Others:</strong> <span class="skill-items"><span>Git</span><span>basic Linux</span><span>Roboflow</span></span></div>
+                        <div class="skill-category"><strong data-i18n="about.skills.languages">Languages:</strong> <span class="skill-items"><span data-i18n="about.skills.vietnamese">Vietnamese (native)</span><span data-i18n="about.skills.english">English (...)</span></span></div>
                     </div>
                 </div>
             </div>
@@ -757,19 +793,19 @@
         <!--  TECHNICAL PROJECTS  -->
         <!-- ============================================================ -->
         <section id="projects" class="max-w-6xl mx-auto px-6 py-16 md:py-24">
-            <h2 class="section-title section-title-animate mb-10">Technical Projects</h2>
+            <h2 class="section-title section-title-animate mb-10" data-i18n="projects.title">Technical Projects</h2>
 
             <div class="grid md:grid-cols-3 gap-6 stagger-container">
 
-                <!-- ===== PROJECT CARD ===== -->
+                <!-- ===== PROJECT 1 ===== -->
                 <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
                     <div class="flex-1 space-y-4">
                         <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
                             <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
-                            Group Project - Team Leader
+                            <span data-i18n="projects.p1.badge">Group Project - Team Leader</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white leading-snug">Gaze-Controlled Computer</h3>
-                        <p class="text-sm text-gray-300/80 leading-relaxed">YOLOv8 model for pupil detection and polynomial regression with smooth cursor control.</p>
+                        <h3 class="text-xl font-bold text-white leading-snug" data-i18n="projects.p1.title">Gaze-Controlled Computer</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed" data-i18n="projects.p1.desc">YOLOv8 model for pupil detection and polynomial regression with smooth cursor control.</p>
                         <div class="flex flex-wrap gap-1.5 pt-1">
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">YOLOv8 detect</span>
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Polynomial Regression</span>
@@ -785,14 +821,15 @@
                     </div>
                 </div>
 
+                <!-- ===== PROJECT 2 ===== -->
                 <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
                     <div class="flex-1 space-y-4">
                         <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
                             <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
-                            Research Project
+                            <span data-i18n="projects.p2.badge">Research Project</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white leading-snug">FoG Parkinson Detection</h3>
-                        <p class="text-sm text-gray-300/80 leading-relaxed">IoT wearable using an Multi-Layer Perceptron (MLP) model to predict Freezing of Gait events and trigger instant audio warnings (&lt;1.2s latency) for patients</p>
+                        <h3 class="text-xl font-bold text-white leading-snug" data-i18n="projects.p2.title">FoG Parkinson Detection</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed" data-i18n="projects.p2.desc">IoT wearable using an Multi-Layer Perceptron (MLP) model to predict Freezing of Gait events and trigger instant audio warnings (&lt;1.2s latency) for patients</p>
                         <div class="flex flex-wrap gap-1.5 pt-1">
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">MLP</span>
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">MPU6050</span>
@@ -808,14 +845,15 @@
                     </div>
                 </div>
 
+                <!-- ===== PROJECT 3 ===== -->
                 <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
                     <div class="flex-1 space-y-4">
                         <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
                             <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
-                            Personal Project
+                            <span data-i18n="projects.p3.badge">Personal Project</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white leading-snug">Autonomous Sidewalk Robot</h3>
-                        <p class="text-sm text-gray-300/80 leading-relaxed">Self-driving robot utilizing computer vision for sidewalk mapping and PID control for stable, autonomous path navigation.</p>
+                        <h3 class="text-xl font-bold text-white leading-snug" data-i18n="projects.p3.title">Autonomous Sidewalk Robot</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed" data-i18n="projects.p3.desc">Self-driving robot utilizing computer vision for sidewalk mapping and PID control for stable, autonomous path navigation.</p>
                         <div class="flex flex-wrap gap-1.5 pt-1">
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">YOLOv8 Seg</span>
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">PID Control</span>
@@ -831,14 +869,15 @@
                     </div>
                 </div>
 
+                <!-- ===== PROJECT 4 ===== -->
                 <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
                     <div class="flex-1 space-y-4">
                         <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
                             <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
-                            Personal Project
+                            <span data-i18n="projects.p4.badge">Personal Project</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white leading-snug">Headmouse-Hardware</h3>
-                        <p class="text-sm text-gray-300/80 leading-relaxed">Arduino-based assistive mouse featuring head-tracking movement and blink-to-click functionality.</p>
+                        <h3 class="text-xl font-bold text-white leading-snug" data-i18n="projects.p4.title">Headmouse-Hardware</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed" data-i18n="projects.p4.desc">Arduino-based assistive mouse featuring head-tracking movement and blink-to-click functionality.</p>
                         <div class="flex flex-wrap gap-1.5 pt-1">
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">MPU6050</span>
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">TCRT5000</span>
@@ -854,17 +893,18 @@
                     </div>
                 </div>
 
+                <!-- ===== PROJECT 5 ===== -->
                 <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
                     <div class="flex-1 space-y-4">
                         <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
                             <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
-                            Personal Project
+                            <span data-i18n="projects.p5.badge">Personal Project</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white leading-snug">Headmouse-Software</h3>
-                        <p class="text-sm text-gray-300/80 leading-relaxed">A webcam-based headmouse using MediaPipe to map nose movements to cursor motion and detecting independent eye-blinks for clicks.</p>
+                        <h3 class="text-xl font-bold text-white leading-snug" data-i18n="projects.p5.title">Headmouse-Software</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed" data-i18n="projects.p5.desc">A webcam-based headmouse using MediaPipe to map nose movements to cursor motion and detecting independent eye-blinks for clicks.</p>
                         <div class="flex flex-wrap gap-1.5 pt-1">
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">MediaPipe</span>
-                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10"> Facial Landmarks</span>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Facial Landmarks</span>
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Smoothing Technique</span>
                         </div>
                     </div>
@@ -876,14 +916,15 @@
                     </div>
                 </div>
 
+                <!-- ===== PROJECT 6 ===== -->
                 <div class="glass rounded-3xl p-6 md:p-7 flex flex-col h-full">
                     <div class="flex-1 space-y-4">
                         <div class="flex items-center gap-2 text-xs font-medium text-cyan-300/60 uppercase tracking-wider">
                             <span class="w-2 h-2 rounded-full bg-cyan-400/50"></span>
-                            Group Project - Team Leader
+                            <span data-i18n="projects.p6.badge">Group Project - Team Leader</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white leading-snug">Fine-Tuned-LLM-Chat</h3>
-                        <p class="text-sm text-gray-300/80 leading-relaxed">Integrates a fine-tuned Gemma2:2b, Qwen2.5:3b,... model to convert discrete characters into complete sentences</p>
+                        <h3 class="text-xl font-bold text-white leading-snug" data-i18n="projects.p6.title">Fine-Tuned-LLM-Chat</h3>
+                        <p class="text-sm text-gray-300/80 leading-relaxed" data-i18n="projects.p6.desc">Integrates a fine-tuned Gemma2:2b, Qwen2.5:3b,... model to convert discrete characters into complete sentences</p>
                         <div class="flex flex-wrap gap-1.5 pt-1">
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Lora</span>
                             <span class="text-[10px] px-2.5 py-1 rounded-full bg-cyan-400/10 text-cyan-300/80 border border-cyan-400/10">Data</span>
@@ -900,75 +941,50 @@
             </div>
         </section>
 
-        <!-- ============================================================ -->
         <!--  AWARDS & CERTIFICATES  -->
-        <!-- ============================================================ -->
+
         <section id="awards" class="max-w-6xl mx-auto px-6 py-16 md:py-24">
-            <h2 class="section-title section-title-animate mb-10">Awards &amp; Certificates</h2>
+            <h2 class="section-title section-title-animate mb-10" data-i18n="awards.title">Awards &amp; Certificates</h2>
 
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-container">
 
                 <div class="award-item">
                     <span class="award-badge">🏅</span>
                     <div class="award-text">
-                        Fourth Prize · Vietnam Science and Engineering Fair
-                        <small>STEM Competition</small>
+                        <span data-i18n="awards.a1.title">Fourth Prize · Vietnam Science and Engineering Fair</span>
+                        <small data-i18n="awards.a1.sub">STEM Competition</small>
                     </div>
                 </div>
 
                 <div class="award-item">
                     <span class="award-badge">🥉</span>
                     <div class="award-text">
-                        Third Prize · National Youth Informatics Contest Finals
-                        <small>Programming &amp; IT</small>
+                        <span data-i18n="awards.a2.title">Third Prize · National Youth Informatics Contest Finals</span>
+                        <small data-i18n="awards.a2.sub">Programming &amp; IT</small>
                     </div>
                 </div>
 
                 <div class="award-item">
                     <span class="award-badge">🥉</span>
                     <div class="award-text">
-                        Bronze Medal · HSGS Olympiad, VNU Ha Noi
-                        <small>Physics Olympiad</small>
+                        <span data-i18n="awards.a3.title">Bronze Medal · HSGS Olympiad, VNU Ha Noi</span>
+                        <small data-i18n="awards.a3.sub">Physics Olympiad</small>
                     </div>
                 </div>
 
                 <div class="award-item">
                     <span class="award-badge">🥇</span>
                     <div class="award-text">
-                        First Prize · Regional Youth Informatics qualifiers
-                        <small>Programming &amp; IT</small>
+                        <span data-i18n="awards.a4.title">First Prize · Regional Youth Informatics qualifiers</span>
+                        <small data-i18n="awards.a4.sub">Programming &amp; IT</small>
                     </div>
                 </div>
 
                 <div class="award-item">
                     <span class="award-badge">⭐</span>
                     <div class="award-text">
-                        Top 50 Nationwide · Samsung Solve for Tomorrow Viet Nam
-                        <small>STEM Competition</small>
-                    </div>
-                </div>
-
-                <div class="award-item">
-                    <span class="award-badge">🥇</span>
-                    <div class="award-text">
-                        First Prize · Provincial Youth Informatics Competition
-                        <small>Programming &amp; IT</small>
-                    </div>
-                </div>
-
-                <div class="award-item">
-                    <span class="award-badge">🥈</span>
-                    <div class="award-text">
-                        Second Prize · Provincial Science and Engineering Fair
-                        <small>STEM Competition</small>
-                    </div>
-                </div>
-
-                <div class="award-item">
-                    <span class="award-badge">🏅</span>
-                    <div class="award-text">
-                        Fourth Prize · Provincial Academic Excellence Selection Exams
-                        <small>Physics Olympiad</small>
+                        <span data-i18n="awards.a5.title">Top 50 Nationwide · Samsung Solve for Tomorrow Viet Nam</span>
+                        <small data-i18n="awards.a5.sub">STEM Competition</small>
                     </div>
                 </div>
 
@@ -980,8 +996,8 @@
         <footer id="contact" class="max-w-6xl mx-auto px-6 py-16 md:py-24 border-t border-white/5">
             <div class="contact-animate text-center space-y-8">
                 <h2 class="text-3xl md:text-4xl font-bold text-white/90 tracking-tight">
-                    Let's connect and build<br class="sm:hidden" />
-                    <span class="shimmer-text">something amazing.</span>
+                    <span data-i18n="contact.headline1">Let's connect and build</span><br class="sm:hidden" />
+                    <span class="shimmer-text" data-i18n="contact.headline2">something amazing.</span>
                 </h2>
 
                 <div class="flex flex-wrap justify-center gap-3 md:gap-4 pt-2">
@@ -1006,7 +1022,7 @@
                 </div>
 
                 <div class="footer-animate pt-8 text-xs text-gray-500/60 tracking-wide">
-                    © 2026 Tạ Phúc Lâm · Built with <span class="text-cyan-400/50">✦</span> precision
+                    <span data-i18n="footer.copyright">© 2026 Tạ Phúc Lâm · Built with</span> <span class="text-cyan-400/50">✦</span> <span data-i18n="footer.precision">precision</span>
                 </div>
             </div>
         </footer>
@@ -1018,7 +1034,218 @@
         (function() {
             'use strict';
 
-            // ---- mobile menu ----
+            // ============================================================
+            //  📚 TRANSLATIONS
+            // ============================================================
+            const translations = {
+                // ---- brand ----
+                'brand.name': { en: 'PL', vi: 'PL' },
+
+                // ---- nav ----
+                'nav.home': { en: 'Home', vi: 'Trang chủ' },
+                'nav.about': { en: 'About', vi: 'Giới thiệu' },
+                'nav.projects': { en: 'Projects', vi: 'Dự án' },
+                'nav.awards': { en: 'Awards', vi: 'Giải thưởng' },
+                'nav.contact': { en: 'Contact', vi: 'Liên hệ' },
+
+                // ---- hero ----
+                'hero.name': { en: 'Ta Phuc Lam', vi: 'Tạ Phúc Lâm' },
+                'hero.title': { en: 'Electronics and Telecommunications Engineering Student',
+                    vi: 'Sinh viên Kỹ thuật Điện tử - Viễn thông' },
+                'hero.university': { en: 'University of Science, VNU-HCM',
+                    vi: 'Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM' },
+                'hero.btnProjects': { en: 'View Projects', vi: 'Xem dự án' },
+                'hero.btnContact': { en: 'Contact Me', vi: 'Liên hệ' },
+
+                // ---- about ----
+                'about.title': { en: 'About Me', vi: 'Giới thiệu' },
+                'about.bio': { en: 'I am a passionate AIoT and Robotics student. I have cultivated a strong background in Embedded Systems, Machine Learning, Computer Vision,... My goal is to transform technical innovations into meaningful social impact, especially in healthcare accessibility.',
+                    vi: 'Tôi là sinh viên đam mê AIoT và Robotics. Tôi đã xây dựng nền tảng vững chắc về Hệ thống nhúng, Học máy, Thị giác máy tính,... Mục tiêu của tôi là biến đổi các đổi mới kỹ thuật thành tác động xã hội ý nghĩa, đặc biệt trong khả năng tiếp cận y tế.' },
+                'about.pill1': { en: '🎯 AI for Good', vi: '🎯 AI vì cộng đồng' },
+                'about.pill2': { en: '🧠 ML & CV', vi: '🧠 ML & Thị giác máy tính' },
+                'about.pill3': { en: '⚡ Embedded Systems', vi: '⚡ Hệ thống nhúng' },
+                'about.pill4': { en: '🤝 Leadership', vi: '🤝 Lãnh đạo' },
+
+                'about.education': { en: 'Education', vi: 'Học vấn' },
+                'about.edu1.title': { en: 'University of Science, VNU-HCM',
+                    vi: 'Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM' },
+                'about.edu1.meta': { en: 'Aug 2026 – Present', vi: 'T8/2026 – Hiện tại' },
+                'about.edu1.detail': { en: 'Electronics and Telecommunications Engineering',
+                    vi: 'Kỹ thuật Điện tử - Viễn thông' },
+                'about.edu2.title': { en: 'Le Quy Don High School for the Gifted',
+                    vi: 'Trường THPT Chuyên Lê Quý Đôn' },
+                'about.edu2.meta': { en: 'Physics Specialized Class · Aug 2023 – May 2026',
+                    vi: 'Lớp chuyên Vật lý · T8/2023 – T5/2026' },
+                'about.edu2.detail': { en: 'GPA: 8.7/10.0 (Grade 12) <br>President of STEM Club (Oct 2024 – May 2026)',
+                    vi: 'ĐTB: 8.7/10.0 (Lớp 12) <br>Chủ nhiệm CLB STEM (T10/2024 – T5/2026)' },
+
+                'about.skillsTitle': { en: 'Technical Skills', vi: 'Kỹ năng kỹ thuật' },
+                'about.skills.prog': { en: 'Programming:', vi: 'Lập trình:' },
+                'about.skills.ai': { en: 'AI & Computer Vision:', vi: 'AI & Thị giác máy tính:' },
+                'about.skills.embedded': { en: 'Embedded Systems:', vi: 'Hệ thống nhúng:' },
+                'about.skills.robotics': { en: 'Robotics & Control:', vi: 'Robot & Điều khiển:' },
+                'about.skills.tools': { en: 'Tools & Others:', vi: 'Công cụ & Khác:' },
+                'about.skills.languages': { en: 'Languages:', vi: 'Ngôn ngữ:' },
+                'about.skills.vietnamese': { en: 'Vietnamese (native)', vi: 'Tiếng Việt (bản ngữ)' },
+                'about.skills.english': { en: 'English (...)', vi: 'Tiếng Anh (...)' },
+
+                // ---- projects ----
+                'projects.title': { en: 'Technical Projects', vi: 'Dự án kỹ thuật' },
+
+                'projects.p1.badge': { en: 'Group Project - Team Leader', vi: 'Dự án nhóm - Trưởng nhóm' },
+                'projects.p1.title': { en: 'Gaze-Controlled Computer', vi: 'Điều khiển máy tính bằng ánh mắt' },
+                'projects.p1.desc': { en: 'YOLOv8 model for pupil detection and polynomial regression with smooth cursor control.',
+                    vi: 'Mô hình YOLOv8 phát hiện đồng tử và hồi quy đa thức điều khiển con trỏ mượt mà.' },
+
+                'projects.p2.badge': { en: 'Research Project', vi: 'Dự án nghiên cứu' },
+                'projects.p2.title': { en: 'FoG Parkinson Detection', vi: 'Phát hiện FoG trong bệnh Parkinson' },
+                'projects.p2.desc': { en: 'IoT wearable using an Multi-Layer Perceptron (MLP) model to predict Freezing of Gait events and trigger instant audio warnings (<1.2s latency) for patients',
+                    vi: 'Thiết bị đeo IoT sử dụng mô hình MLP dự đoán sự kiện FoG và kích hoạt cảnh báo âm thanh (<1.2s) cho bệnh nhân' },
+
+                'projects.p3.badge': { en: 'Personal Project', vi: 'Dự án cá nhân' },
+                'projects.p3.title': { en: 'Autonomous Sidewalk Robot', vi: 'Robot tự hành trên lối đi bộ' },
+                'projects.p3.desc': { en: 'Self-driving robot utilizing computer vision for sidewalk mapping and PID control for stable, autonomous path navigation.',
+                    vi: 'Robot tự lái sử dụng thị giác máy tính để lập bản đồ vỉa hè và điều khiển PID cho đường đi ổn định.' },
+
+                'projects.p4.badge': { en: 'Personal Project', vi: 'Dự án cá nhân' },
+                'projects.p4.title': { en: 'Headmouse-Hardware', vi: 'Điều khiển chuột bằng cử động đầu - Phần cứng' },
+                'projects.p4.desc': { en: 'Arduino-based assistive mouse featuring head-tracking movement and blink-to-click functionality.',
+                    vi: 'Điều khiển chuột dựa trên Arduino với tính năng theo dõi đầu và nhấp chuột bằng chớp mắt.' },
+
+                'projects.p5.badge': { en: 'Personal Project', vi: 'Dự án cá nhân' },
+                'projects.p5.title': { en: 'Headmouse-Software', vi: 'Điều khiển chuột bằng cử động đầu - Phần mềm' },
+                'projects.p5.desc': { en: 'A webcam-based headmouse using MediaPipe to map nose movements to cursor motion and detecting independent eye-blinks for clicks.',
+                    vi: 'Điều khiển chuột dùng webcam sử dụng MediaPipe để ánh xạ chuyển động mũi thành di chuyển con trỏ và phát hiện chớp mắt để nhấp chuột.' },
+
+                'projects.p6.badge': { en: 'Group Project - Team Leader', vi: 'Dự án nhóm - Trưởng nhóm' },
+                'projects.p6.title': { en: 'Fine-Tuned-LLM-for-Systems', vi: 'Tinh chỉnh mô hình LLM cho hệ thống' },
+                'projects.p6.desc': { en: 'Integrates a fine-tuned Gemma2:2b, Qwen2.5:3b,... model to convert discrete characters into complete sentences',
+                    vi: 'Tích hợp mô hình Gemma2:2b, Qwen2.5:3b,... đã tinh chỉnh để chuyển đổi ký tự rời rạc thành câu hoàn chỉnh' },
+
+                // awards
+                'awards.title': { en: 'Awards & Certificates', vi: 'Giải thưởng & Chứng chỉ' },
+                'awards.a1.title': { en: 'Fourth Prize · Vietnam Science and Engineering Fair',
+                    vi: 'Giải Tư · Hội thi Khoa học Kỹ thuật Việt Nam' },
+                'awards.a1.sub': { en: 'STEM Competition', vi: 'Cuộc thi STEM' },
+                'awards.a2.title': { en: 'Third Prize · National Youth Informatics Contest Finals',
+                    vi: 'Giải Ba · Chung kết Hội thi Tin học Trẻ Toàn quốc' },
+                'awards.a2.sub': { en: 'Programming & IT', vi: 'Lập trình & CNTT' },
+                'awards.a3.title': { en: 'Bronze Medal · HSGS Olympiad, VNU Ha Noi',
+                    vi: 'Huy chương Đồng · Olympic HSGS, ĐHQG Hà Nội' },
+                'awards.a3.sub': { en: 'Physics Olympiad', vi: 'Olympic Vật lý' },
+                'awards.a4.title': { en: 'First Prize · Regional Youth Informatics qualifiers',
+                    vi: 'Giải Nhất · Vòng loại Khu vực Tin học Trẻ' },
+                'awards.a4.sub': { en: 'Programming & IT', vi: 'Lập trình & CNTT' },
+                'awards.a5.title': { en: 'Top 50 Nationwide · Samsung Solve for Tomorrow Viet Nam',
+                    vi: 'Top 50 Toàn quốc · Samsung Solve for Tomorrow Việt Nam' },
+                'awards.a5.sub': { en: 'STEM Competition', vi: 'Cuộc thi STEM' },
+
+                // contact / footer 
+                'contact.headline1': { en: "Let's connect and build", vi: 'Hãy kết nối và cùng xây dựng' },
+                'contact.headline2': { en: 'something amazing.', vi: 'điều tuyệt vời.' },
+                'footer.copyright': { en: '© 2026 Tạ Phúc Lâm · Built with', vi: '© 2026 Tạ Phúc Lâm · Xây dựng với' },
+                'footer.precision': { en: 'precision', vi: 'sự tỉ mỉ' },
+            };
+
+
+            // I18N ENGINE
+            
+            let currentLang = localStorage.getItem('preferred-lang') || 'en';
+
+            // ---- helper: get translation ----
+            function t(key, lang) {
+                const entry = translations[key];
+                if (!entry) return key;
+                return entry[lang] || entry.en || key;
+            }
+
+            // ---- apply language to DOM ----
+            function applyLanguage(lang) {
+                currentLang = lang;
+                localStorage.setItem('preferred-lang', lang);
+
+                // --- textContent nodes ---
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    const val = t(key, lang);
+                    if (val !== undefined) {
+              
+                        const translation = t(key, lang);
+
+                        if (/<[a-z][\s\S]*>/i.test(translation)) {
+                            el.innerHTML = translation;
+                        } else {
+                            el.textContent = translation;
+                        }
+                    }
+                });
+
+                // --- html nodes (for rich content like shimmer name) ---
+                document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-html');
+                    const val = t(key, lang);
+                    if (val !== undefined) {
+                        el.innerHTML = val;
+                    }
+                });
+
+                // --- update toggle buttons ---
+                document.querySelectorAll('.lang-toggle button').forEach(btn => {
+                    const l = btn.getAttribute('data-lang');
+                    btn.classList.toggle('active', l === lang);
+                });
+
+                // --- update document lang ---
+                document.documentElement.lang = lang;
+
+                // --- trigger a subtle visual update ---
+                document.querySelectorAll('.glass, .award-item, .contact-link, .skill-pill').forEach(el => {
+                    el.style.transition = 'opacity 0.15s ease';
+                    el.style.opacity = '0.92';
+                    requestAnimationFrame(() => {
+                        el.style.opacity = '1';
+                    });
+                });
+            }
+
+           
+            //  LANGUAGE 
+            
+            document.getElementById('langEn').addEventListener('click', function(e) {
+                e.preventDefault();
+                applyLanguage('en');
+            });
+            document.getElementById('langVi').addEventListener('click', function(e) {
+                e.preventDefault();
+                applyLanguage('vi');
+            });
+
+
+            //  NAV HIGHLIGHT
+
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            function updateActiveLink() {
+                let current = '';
+                const scrollY = window.scrollY + 120;
+                sections.forEach(sec => {
+                    const top = sec.offsetTop;
+                    const height = sec.offsetHeight;
+                    if (scrollY >= top && scrollY < top + height) {
+                        current = sec.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    link.style.color = href === '#' + current ? '#ffffff' : '#b0c8d8';
+                });
+            }
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+
+            // MENU
+            
             const toggleBtn = document.getElementById('menuToggle');
             const mobileNav = document.getElementById('mobileNav');
             let menuOpen = false;
@@ -1043,70 +1270,24 @@
                 }
             });
 
-            // ---- nav highlight ----
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-link');
-
-            function updateActiveLink() {
-                let current = '';
-                const scrollY = window.scrollY + 120;
-                sections.forEach(sec => {
-                    const top = sec.offsetTop;
-                    const height = sec.offsetHeight;
-                    if (scrollY >= top && scrollY < top + height) {
-                        current = sec.getAttribute('id');
-                    }
-                });
-                navLinks.forEach(link => {
-                    link.style.color = link.getAttribute('href') === '#' + current ? '#ffffff' :
-                        '#b0c8d8';
-                });
-            }
-            window.addEventListener('scroll', updateActiveLink);
-            updateActiveLink();
-
-            // ============================================================
-            //  🎬 ENTRANCE ANIMATION ENGINE
-            // ============================================================
-
-            // ---- Helper: add 'visible' class to all .animate-on-load elements ----
+            
+            //ENTRANCE ANIMATIONS
+            
             function revealAnimatedElements() {
-                // Header
                 document.querySelector('.header-animate')?.classList.add('visible');
-
-                // Hero
                 document.querySelector('.hero-title')?.classList.add('visible');
                 document.querySelector('.hero-sub')?.classList.add('visible');
                 document.querySelector('.hero-meta')?.classList.add('visible');
                 document.querySelector('.hero-buttons')?.classList.add('visible');
-
-                // Avatar
                 document.querySelector('.avatar-animate')?.classList.add('visible');
                 document.querySelector('.glow-ring-animate')?.classList.add('visible');
-
-                // Section titles
-                document.querySelectorAll('.section-title-animate').forEach(el => {
-                    el.classList.add('visible');
-                });
-
-                // Stagger containers
-                document.querySelectorAll('.stagger-container').forEach(el => {
-                    el.classList.add('visible');
-                });
-
-                // Contact
+                document.querySelectorAll('.section-title-animate').forEach(el => el.classList.add('visible'));
+                document.querySelectorAll('.stagger-container').forEach(el => el.classList.add('visible'));
                 document.querySelector('.contact-animate')?.classList.add('visible');
-
-                // Footer
                 document.querySelector('.footer-animate')?.classList.add('visible');
-
-                // Any remaining .animate-on-load elements
-                document.querySelectorAll('.animate-on-load').forEach(el => {
-                    el.classList.add('visible');
-                });
+                document.querySelectorAll('.animate-on-load').forEach(el => el.classList.add('visible'));
             }
 
-            // ---- reveal on load with a tiny delay for smoothness ----
             if (document.readyState === 'complete') {
                 setTimeout(revealAnimatedElements, 200);
             } else {
@@ -1115,43 +1296,27 @@
                 });
             }
 
-            // ---- also support Intersection Observer for elements that might not be in viewport on load ----
-            // (but since everything is above the fold or we want it all to animate on load, we already did that)
-            // However, for safety, we'll also observe any .animate-on-load that might have been missed.
-
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
                     }
                 });
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -50px 0px'
-            });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
 
-            // Observe all .animate-on-load elements (as a fallback)
-            document.querySelectorAll('.animate-on-load:not(.visible)').forEach(el => {
-                observer.observe(el);
-            });
+            document.querySelectorAll('.animate-on-load:not(.visible)').forEach(el => observer.observe(el));
+            document.querySelectorAll('.stagger-container:not(.visible)').forEach(el => observer.observe(el));
 
-            // Also observe any .stagger-container children that might not have been caught
-            document.querySelectorAll('.stagger-container:not(.visible)').forEach(el => {
-                observer.observe(el);
-            });
-
-            // ---- one more pass after fonts and images load ----
             window.addEventListener('load', function() {
-                // ensure everything is visible after a moment
                 setTimeout(() => {
-                    document.querySelectorAll('.animate-on-load:not(.visible)').forEach(el => {
-                        el.classList.add('visible');
-                    });
-                    document.querySelectorAll('.stagger-container:not(.visible)').forEach(el => {
-                        el.classList.add('visible');
-                    });
+                    document.querySelectorAll('.animate-on-load:not(.visible)').forEach(el => el.classList
+                        .add('visible'));
+                    document.querySelectorAll('.stagger-container:not(.visible)').forEach(el => el.classList
+                        .add('visible'));
                 }, 400);
             });
+
+            applyLanguage(currentLang);
 
         })();
     </script>
